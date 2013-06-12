@@ -11,9 +11,9 @@ function phoneus_field_formatter_info(){
   // We can add more here later if needed.
   return array(
     // we gave ut this name and it has an array of data associated with it.
-    phoneus_custom_field => array(
+    'phoneus_custom_field' => array(
       // This displays when we select this in our form ui.
-      'label' => t(''),
+      'label' => t('Phone US'),
       // We only need this to work with rext fields for now.
       'field types' => array('text'),
     )
@@ -32,4 +32,18 @@ function phoneus_field_formatter_view($entity_type, $entity, $field, $instance, 
       break;
   }
   return $element;
+}
+
+// Theme the example field
+function theme_phoneus_custom_field($variables) {
+  return '<b>' . $variables['value'] . '</b>';
+}
+
+// Our theme function as defined above
+function theme_phoneus() {
+  return array(
+      'phoneus_custom_field' => array(
+        'variables' => array('value' => NULL),
+      ),
+    );
 }
