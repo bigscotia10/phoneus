@@ -1,33 +1,35 @@
 <?php
 
-/**
- * Implements hook_field_formatter_info().
- */
-function phoneus_field_formatter_info() {
+// Add item to array if formatters that have been defined
+// Define how aour formatter will be associated
+// Theme the field
+// Regsiter the field funciton
+
+// Supplies information about the formatter.
+function phoneus_field_formatter_info(){
+  // returns an array, the collection of any formatter we are returning
+  // We can add more here later if needed.
   return array(
-    // the key must be unique, so it's best to prefix with your module's name.
-    'phoneus_absolute_url' => array(
-      // the label is is what is displayed in the select box in the UI.
-      'label' => t('US Based Phone Number'),
-      // field types is the important bit!! List the field types your formatter is for.
-      'field types' => array('textfield'),
-      // You can usually leave 'multiple values' as follows:
-      'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-    ),
+    // we gave ut this name and it has an array of data associated with it.
+    phoneus_custom_field => array(
+      // This displays when we select this in our form ui.
+      'label' => t(''),
+      // We only need this to work with rext fields for now.
+      'field types' => array('text'),
+    )
   );
 }
 
-/**
- * Implements hook_field_formatter_view(). This code just passes straight
- * through to a theme function, MYMODULE_formatter_FORMATTER
- * (e.g. MYMODULE_formatter_MYMODULE_absolute_url).
- */
+// Assign  a callback for out formatter when it runs
 function phoneus_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $elements = array();
-  foreach ($items as $delta => $item) {
-    $elements[$delta] = array(
-      '#markup' => theme('phoneus_formatter_'. $display['type'], array('element' => $item, 'field' => $instance)),
-    );
+  // if its this type, above we say textfield type
+  switch ($display['type']){
+    // and out field name defined above
+    case 'phoneus_custom_field':
+      $element[0]['#type'] = 'markup';
+      // since its only one item, we can pass it the 0, for the first item
+      $element[0]['#markup'] = theme('phoneus_custom_field', array('value' => $items[0]['safe_value']));
+      break;
   }
-  return $elements;
+  return $element;
 }
