@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function phoneus_field_formatter_info() {
+  return array(
+    // the key must be unique, so it's best to prefix with your module's name.
+    'phoneus_absolute_url' => array(
+      // the label is is what is displayed in the select box in the UI.
+      'label' => t('US Based Phone Number'),
+      // field types is the important bit!! List the field types your formatter is for.
+      'field types' => array('textfield'),
+      // You can usually leave 'multiple values' as follows:
+      'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view(). This code just passes straight
+ * through to a theme function, MYMODULE_formatter_FORMATTER
+ * (e.g. MYMODULE_formatter_MYMODULE_absolute_url).
+ */
+function phoneus_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $elements = array();
+  foreach ($items as $delta => $item) {
+    $elements[$delta] = array(
+      '#markup' => theme('phoneus_formatter_'. $display['type'], array('element' => $item, 'field' => $instance)),
+    );
+  }
+  return $elements;
+}
