@@ -1,49 +1,75 @@
 <?php
 
-// Add item to array if formatters that have been defined
-// Define how aour formatter will be associated
-// Theme the field
-// Regsiter the field funciton
+/**
+ * Transforms a textfield into a US formatted phone number.
+ */
 
-// Supplies information about the formatter.
-function phoneus_field_formatter_info(){
-  // returns an array, the collection of any formatter we are returning
-  // We can add more here later if needed.
+/**
+* Converts phone numbers to the US based formatting standard
+*/
+function formatPhone($num) {
+  $num = preg_replace('/[^0-9]/', '', $num);
+  $len = strlen($num);
+  if($len == 7) {
+    $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num); 
+    }
+  elseif($len == 10) {
+    $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
+  }
+ 
+return $num;
+}
+ 
+// echo formatPhone('1 208 - 386 2934');
+// will print: (208) 386-2934 </code>
+
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function phoneus_field_formatter_info() {
   return array(
-    // we gave ut this name and it has an array of data associated with it.
-    'phoneus_custom_field' => array(
-      // This displays when we select this in our form ui.
-      'label' => t('Phone US'),
-      // We only need this to work with rext fields for now.
+    'phoneus_example_field' => array(
+      'label' => t('US Phone Number'),
       'field types' => array('text'),
-    )
+    ),
   );
 }
 
-// Assign  a callback for out formatter when it runs
-function phoneus_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  // if its this type, above we say textfield type
-  switch ($display['type']){
-    // and out field name defined above
-    case 'phoneus_custom_field':
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function phoneus_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  switch ($display['type']) {
+    case 'phoneus_example_field':
       $element[0]['#type'] = 'markup';
-      // since its only one item, we can pass it the 0, for the first item
-      $element[0]['#markup'] = theme('phoneus_custom_field', array('value' => $items[0]['safe_value']));
+      $element[0]['#markup'] = theme('phoneus_example_field', array('value' => $items[0]['safe_value']));
       break;
   }
+
   return $element;
 }
 
-// Theme the example field
-function theme_phoneus_custom_field($variables) {
-  return '<b>' . $variables['value'] . '</b>';
+
+/**
+ * Theme the example field.
+ */
+function theme_phoneus_example_field($variables) {
+$variables['value'] = formatPhone($variables['value']);
+  return $variables['value'];
+
 }
 
-// Our theme function as defined above
-function theme_phoneus() {
+
+/**
+ * Implements hook_theme().
+ */
+function phoneus_theme() {
   return array(
-      'phoneus_custom_field' => array(
-        'variables' => array('value' => NULL),
-      ),
-    );
+    'phoneus_example_field' => array(
+      'variables' => array('value' => NULL),
+    ),
+  );
 }
+

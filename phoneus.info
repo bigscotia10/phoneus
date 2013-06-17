@@ -1,12 +1,11 @@
 name = phoneus
 description = US Phone field formatter for text fields.
 core = 7.x
-package = PCMS
+package =  Fields
 
 files[] = phoneus.module
 
-; Information added by drupal.org packaging script on 2012-05-29
 version = "7.x-1.0"
 core = "7.x"
 project = "phoneus"
-datestamp = "1338304248"
+datestamp = "1371478941"
