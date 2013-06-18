@@ -41,11 +41,13 @@ function phoneus_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function phoneus_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  if ($items) {
   switch ($display['type']) {
     case 'phoneus_example_field':
       $element[0]['#type'] = 'markup';
       $element[0]['#markup'] = theme('phoneus_example_field', array('value' => $items[0]['safe_value']));
       break;
+  }
   }
 
   return $element;
@@ -72,4 +74,3 @@ function phoneus_theme() {
     ),
   );
 }
-
